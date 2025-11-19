@@ -8,11 +8,7 @@ data_dir = Path("output/us/ppt/")
 output_dir = Path("output/nc/ppt/")
 output_dir.mkdir(parents=True, exist_ok=True)
 
-files = list()
-for year_dir in os.listdir(data_dir):
-    year_dir = Path(data_dir / year_dir)
-    files += [Path(year_dir / file) for file in os.listdir(str(year_dir))]
-files = sorted(files)
+files = sorted(list(data_dir.rglob("*.parquet")))
 
 nc = dd.read_parquet("output/nc/nc_prism_id.parquet")[["id"]].persist()
 

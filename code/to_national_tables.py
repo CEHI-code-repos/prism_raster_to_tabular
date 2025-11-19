@@ -8,7 +8,7 @@ data_dir = Path("input/ppt/")
 output_dir = Path("output/us/ppt/")
 output_dir.mkdir(exist_ok=True, parents=True)
 
-files = sorted(data_dir.rglob("*.tif"))
+files = sorted(list(data_dir.rglob("*.tif")))
 chunk_size = {"x": 1024, "y": 1024}
 
 for file_path in files:

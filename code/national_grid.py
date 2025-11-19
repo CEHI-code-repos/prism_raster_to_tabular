@@ -5,7 +5,7 @@ data_dir = Path("input/")
 output_dir = Path("output/us/")
 output_dir.mkdir(exist_ok=True, parents=True)
 
-rast_path = sorted(data_dir.rglob("*.tif"))[0]
+rast_path = sorted(list(data_dir.rglob("*.tif")))[0]
 rast = rioxarray.open_rasterio(rast_path).squeeze(drop=True)
     
 df = (
