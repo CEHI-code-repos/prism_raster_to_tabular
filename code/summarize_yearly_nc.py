@@ -1,26 +1,29 @@
 import pandas as pd
 from pathlib import Path
 
-measure = "tdmean"
-data_dir = Path(f"output/nc/{measure}/")
-files = list(data_dir.rglob("*.parquet"))
+measures = ["ppt", "tdmean", "tmin", "tmean", "tmax"]
+for measure in measures:
+    data_dir = Path(f"output/nc/{measure}/")
+    files = list(data_dir.rglob("*.parquet"))
 
-dfs = []
-for f in files:
-    date_str = f.stem.split("_")[-1]
-    date = pd.to_datetime(date_str)
+    file_dict = {}
+    for f in files:
+        year = f.stem.split("_")[-1][:4]
+        file_dict.setdefault(year, []).append(f)
 
-    df = pd.read_parquet(f)
-    df["date"] = date
-    df["year"] = date.year
-    df = df[["id", "date", "year", measure]]
-    dfs.append(df)
+    for year, yearly_files in file_dict.items():
+        dfs = []
+        for f in yearly_files:
+            date_str = f.stem.split("_")[-1]
+            date = pd.to_datetime(date_str)
 
-combined = pd.concat(dfs, ignore_index=True)
+            df = pd.read_parquet(f)
+            df["date"] = date
+            df = df[["id", "date", measure]]
+            dfs.append(df)
 
-by_year = {y: g.drop(columns=["year"]) for y, g in combined.groupby("year")}
+    df = pd.concat(dfs, ignore_index=True)
 
-for year, df in by_year.items():
     out_dir = data_dir / str(year)
     out_dir.mkdir(parents=True, exist_ok=True)
 

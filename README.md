@@ -2,12 +2,15 @@
 
 ### Input data
 
-All input data is stored in the following path structure:
+PRISM input data is stored in the following path structure:
 
 `input/{measure}/{year}/prism_{measure}_us_800m_{YYYYMMDD}/prism_{measure}_us_30s_{YYYYMMDD}.*`
 
-### Processing
+US state TIGER boundaries are also included at
 
+`input/tl_2025_us_state/tl_2025_us_state.shp`
+
+### Processing
 
 1. Create national grid - `code/national_grid.py`  
    a. Get the lon lat coordinates for each grid point  
