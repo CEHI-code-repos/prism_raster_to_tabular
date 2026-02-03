@@ -22,14 +22,14 @@ for measure in measures:
             df = df[["id", "date", measure]]
             dfs.append(df)
 
-    df = pd.concat(dfs, ignore_index=True)
+        df = pd.concat(dfs, ignore_index=True)
 
-    out_dir = data_dir / str(year)
-    out_dir.mkdir(parents=True, exist_ok=True)
+        out_dir = data_dir / str(year)
+        out_dir.mkdir(parents=True, exist_ok=True)
 
-    out_file_parquet = out_dir / f"prism_{measure}_nc_800m_{year}.parquet"
-    out_file_csv = out_dir / f"prism_{measure}_nc_800m_{year}.csv"
-    df.to_parquet(out_file_parquet, index=False)
+        out_file_parquet = out_dir / f"prism_{measure}_nc_800m_{year}.parquet"
+        out_file_csv = out_dir / f"prism_{measure}_nc_800m_{year}.csv"
+        df.to_parquet(out_file_parquet, index=False)
 
-    df["date"] = df["date"].dt.strftime("%Y-%m-%d")
-    df.to_csv(out_file_csv, index=False)
+        df["date"] = df["date"].dt.strftime("%Y-%m-%d")
+        df.to_csv(out_file_csv, index=False)
