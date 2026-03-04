@@ -2,8 +2,7 @@
 
 ### Setup
 
-Create an input folder and put inside of it the 2025 US State boundaries like so:  
-`input/tl_2025_us_state/tl_2025_us_state.shp`
+Create an input folder and put inside of it the boundary file for the area of interest
 
 Then run each script in successsion.
 
