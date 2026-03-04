@@ -19,22 +19,22 @@ The original COGs will total to about 1.5 TB. National parquets will total to ab
    b. Assign ids to each coordinates  
    c. Write to table  `output/us/us_prism_id.*`
 
-3. Create North Carolina grid  `code/nc_grid.py`  
-   a. Read in national grid and project to ESRI:103500  
-   b. Buffer North Carolina 2025 TIGER Boundaries by 1 km using ESRI:103500  
-   c. Do a spatial join to filter the national grid points to North Carolina  
+3. Create area grid  `code/{area}_grid.py`  
+   a. Read in national grid and project to a local projection  
+   b. Buffer area of interest using a local projection, respectively
+   c. Do a spatial join to filter the national grid points to North Carolina or Chicago  
    d. Reproject lon lat back to WGS 1984  
-   e. Write to table  `output/nc/nc_prism_id.*`
+   e. Write to table  `output/{area}/{area}_prism_id.*`
 
 4. Convert national rasters to tabular data  `code/to_national_tables.py`  
    a. Read in each daily raster and assign each point its id  
    b. Convert rasters to parquets  `output/us/{measure}/{year}/prism_{measure}_us_800m_{YYYYMMDD}.parquet`
 
-5. Subset national tabular data to North Carolina  `code/to_nc_tables.py`  
+5. Subset national tabular data to North Carolina  `code/to_{area}_tables.py`  
    a. Read in each daily national parquet  
-   b. Read in North Carolina grid  
-   c. Conduct an inner join between national daily data and the North Carolina grid to filter data to North Carolina  
-   d. Write to table  `output/nc/{measure}/{year}/prism_{measure}_nc_800m_{YYYYMMDD}.*`
+   b. Read in the area of interest's grid  
+   c. Conduct an inner join between national daily data and the area of interest's grid to filter data to the area of interest  
+   d. Write to table  `output/{area}/{measure}/{year}/prism_{measure}_{area}_800m_{YYYYMMDD}.*`
 
-6. Combine daily tables into yearly tables  `code/summarize_yearly_nc.py`  
-  `output/nc/{measure}/{year}/prism_{measure}_nc_800m_{YYYY}.*`
+6. Combine daily tables into yearly tables  `code/summarize_yearly_{area}.py`  
+  `output/{area}/{measure}/{year}/prism_{measure}_{area}_800m_{YYYY}.*`

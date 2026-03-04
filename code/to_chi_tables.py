@@ -3,28 +3,31 @@ from datetime import datetime
 from pathlib import Path
 import dask.dataframe as dd
 
+area = "chi"
 measures = ["ppt", "tdmean", "tmin", "tmean", "tmax"]
 for measure in measures:
-    data_dir = Path(f"/media/user/Expansion/PRISM/output/us/{measure}/")
-    output_dir = Path(f"/media/user/Expansion/PRISM/output/chi/{measure}/")
+    data_dir = Path(f"output/us/{measure}/")
+    output_dir = Path(f"output/{area}/{measure}/")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     files = sorted(list(data_dir.rglob("*.parquet")))
 
-    chi = dd.read_parquet(f"{output_dir.parent}/chi_prism_id.parquet")[["id"]].persist()
+    area_ids = dd.read_parquet(f"{output_dir.parent}/{area}_prism_id.parquet")[
+        ["id"]
+    ].persist()
 
     for f in files:
         date = datetime.strptime(f.stem[-8:], "%Y%m%d")
         date_str = date.strftime("%Y%m%d")
         year_str = date.strftime("%Y")
 
-        out_file = output_dir / year_str / f"prism_{measure}_chi_800m_{date_str}"
+        out_file = output_dir / year_str / f"prism_{measure}_{area}_800m_{date_str}"
         out_file_csv = str(out_file) + ".csv"
         out_file.mkdir(exist_ok=True, parents=True)
 
         ddf = (
             dd.read_parquet(f)
-            .merge(chi, on="id", how="inner")
+            .merge(area_ids, on="id", how="inner")
             .repartition(npartitions=1)
         )
         ddf.to_csv(out_file_csv, single_file=True, index=False)
