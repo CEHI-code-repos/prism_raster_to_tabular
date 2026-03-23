@@ -19,8 +19,8 @@ for measure in measures:
             date = pd.to_datetime(date_str)
 
             df = pd.read_parquet(f)
-            df["date"] = date
-            df = df[["id", "date", measure]]
+            df["grid800mDate"] = date
+            df = df[["grid800mID", "grid800mDate", measure]]
             dfs.append(df)
 
         df = pd.concat(dfs, ignore_index=True)
@@ -32,5 +32,5 @@ for measure in measures:
         out_file_csv = out_dir / f"prism_{measure}_{area}_800m_{year}.csv"
         df.to_parquet(out_file_parquet, index=False)
 
-        df["date"] = df["date"].dt.strftime("%Y-%m-%d")
+        df["grid800mDate"] = df["grid800mDate"].dt.strftime("%Y-%m-%d")
         df.to_csv(out_file_csv, index=False)

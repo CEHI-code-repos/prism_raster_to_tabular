@@ -13,7 +13,7 @@ for measure in measures:
     files = sorted(list(data_dir.rglob("*.parquet")))
 
     area_ids = dd.read_parquet(f"{output_dir.parent}/{area}_prism_id.parquet")[
-        ["id"]
+        ["grid800mID"]
     ].persist()
 
     for f in files:
@@ -27,7 +27,8 @@ for measure in measures:
 
         ddf = (
             dd.read_parquet(f)
-            .merge(area_ids, on="id", how="inner")
+            .rename(columns={"id": "grid800mID"})
+            .merge(area_ids, on="grid800mID", how="inner")
             .repartition(npartitions=1)
         )
         ddf.to_csv(out_file_csv, single_file=True, index=False)
